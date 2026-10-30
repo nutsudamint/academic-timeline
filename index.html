@@ -186,6 +186,36 @@
     .editbar,.tools,.add-step,.hero .btn,.doc-actions,.pager{display:none!important}
     body{background:#fff}
   }
+
+  /* ---------- Tracks (menus) ---------- */
+  main.content{--tc:var(--primary);--tc-soft:var(--primary-soft)}
+  .tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:16px}
+  .tab{display:flex;align-items:center;gap:12px;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 18px;cursor:pointer;transition:border-color .15s,box-shadow .15s,background .15s}
+  .tab:hover{border-color:var(--tab-c);box-shadow:var(--shadow-hover)}
+  .tab.on{border-color:var(--tab-c);background:var(--tab-soft)}
+  .tab-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--tab-soft);color:var(--tab-c);flex:none;font-size:20px}
+  .tab.on .tab-ic{background:var(--tab-c);color:#fff}
+  .tab-t{display:block;font-weight:700;font-size:16px;line-height:1.4;color:var(--ink)}
+  .tab-n{display:block;font-size:13px;color:var(--ink-3)}
+  .tab.add{border-style:dashed;box-shadow:none;background:transparent;color:var(--ink-2);justify-content:center;font-weight:600}
+  .tab.add:hover{color:var(--primary);background:var(--primary-soft)}
+  .tl-intro .grow{flex:1;min-width:200px}
+  .tl-intro .track-name{display:block;font-weight:700;color:var(--ink);font-size:16px}
+  .tl-intro .track-desc{display:block;white-space:pre-wrap}
+  .tl-intro .tools-inline{display:flex;gap:6px}
+  .timeline::before{background:linear-gradient(var(--tc),var(--accent))}
+  .tl-node{border-color:var(--tc);color:var(--tc)}
+  .tl-item:hover .tl-node{background:var(--tc)}
+  .crumb{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--tc);background:var(--tc-soft);padding:3px 10px;border-radius:999px;margin-bottom:6px}
+  .mini-steps button.on{background:var(--tc);border-color:var(--tc)}
+  .mini-steps button.done{border-color:var(--tc);color:var(--tc)}
+
+  /* ---------- Local draft banner ---------- */
+  .draft{background:#fff4d6;border-bottom:1px solid #f0d58a;color:#6b4e0e;font-size:14px}
+  .draft-in{display:flex;align-items:center;gap:10px;padding:8px 20px;flex-wrap:wrap}
+  .draft-in span{flex:1;min-width:220px}
+  .draft .btn{padding:4px 10px;font-size:13px}
+  .draft .btn.ghost{background:#fff;border-color:#e2c26f}
 </style>
 </head>
 <body>
@@ -196,49 +226,63 @@
 <!--
   ===================== ข้อมูลของหน้า =====================
   แก้ไขได้ 2 วิธี
-  1) เปิดไฟล์ในเบราว์เซอร์ → กดปุ่ม "แก้ไข / เพิ่มขั้นตอน" → เพิ่มขั้นตอน/เอกสาร → กด "บันทึกเป็นไฟล์ HTML"
-     ระบบจะดาวน์โหลดไฟล์ใหม่ที่มีข้อมูลและเอกสารฝังอยู่ในตัว ให้ใช้ไฟล์ใหม่นั้นแทนไฟล์เดิม
+  1) เปิดไฟล์ในเบราว์เซอร์ → กดปุ่ม "แก้ไข / เพิ่มขั้นตอน" (หรือเติม ?edit ต่อท้ายลิงก์)
+     → เพิ่มเมนู/ขั้นตอน/เอกสาร → กด "บันทึกเป็นไฟล์ HTML" แล้วใช้ไฟล์ใหม่แทนไฟล์เดิม
   2) แก้ JSON ด้านล่างนี้ด้วย text editor โดยตรง
+     แต่ละเมนูอยู่ใน "tracks" และมีรายการขั้นตอน "steps" ของตัวเอง
 -->
 <script id="initial-data" type="application/json">
 {
   "kicker": "ฝ่ายการพยาบาล โรงพยาบาลศิริราช",
   "title": "ขั้นตอนการยื่นขอกำหนดตำแหน่งพยาบาลผู้ชำนาญการพิเศษ",
-  "subtitle": "คลิกที่แต่ละขั้นตอนเพื่อดูรายละเอียด และดาวน์โหลดเอกสารตัวอย่างที่ใช้ในขั้นตอนนั้น",
+  "subtitle": "เลือกเมนูให้ตรงกับบทบาทของคุณ แล้วคลิกที่แต่ละขั้นตอนเพื่อดูรายละเอียดและดาวน์โหลดเอกสารตัวอย่าง",
   "showEditButton": true,
   "updatedAt": 1761444000000,
-  "steps": [
+  "tracks": [
     {
-      "id": "s1",
-      "title": "เตรียมผลงาน",
-      "subtitle": "รวบรวมและจัดเตรียมผลงานตามเกณฑ์การเสนอขอกำหนดตำแหน่ง",
-      "duration": "",
-      "detail": "",
-      "docs": []
+      "id": "applicant",
+      "name": "ขั้นตอนสำหรับผู้ขอตำแหน่งทางวิชาการ",
+      "description": "สิ่งที่ผู้ยื่นขอกำหนดตำแหน่งต้องดำเนินการ ตั้งแต่เตรียมผลงานจนได้รับแจ้งผล",
+      "steps": [
+        {
+          "id": "s1",
+          "title": "เตรียมผลงาน",
+          "subtitle": "รวบรวมและจัดเตรียมผลงานตามเกณฑ์การเสนอขอกำหนดตำแหน่ง",
+          "duration": "",
+          "detail": "",
+          "docs": []
+        },
+        {
+          "id": "s2",
+          "title": "วันเริ่มดำเนินการ ทำ E-doc",
+          "subtitle": "ขอส่งแบบประวัติส่วนตัวและผลงานเพื่อเสนอขอกำหนดตำแหน่งพยาบาลผู้ชำนาญการพิเศษ",
+          "duration": "",
+          "detail": "",
+          "docs": []
+        },
+        {
+          "id": "s3",
+          "title": "ขออนุมัติแต่งตั้งคณะกรรมการประเมินพนักงานมหาวิทยาลัยเพื่อแต่งตั้งให้ดำรงตำแหน่งพยาบาลผู้ชำนาญการพิเศษ",
+          "subtitle": "",
+          "duration": "",
+          "detail": "",
+          "docs": []
+        },
+        {
+          "id": "s4",
+          "title": "แจ้งผลการพิจารณาคุณสมบัติและผลงานเพื่อเสนอขอกำหนดตำแหน่ง",
+          "subtitle": "",
+          "duration": "",
+          "detail": "",
+          "docs": []
+        }
+      ]
     },
     {
-      "id": "s2",
-      "title": "วันเริ่มดำเนินการ ทำ E-doc",
-      "subtitle": "ขอส่งแบบประวัติส่วนตัวและผลงานเพื่อเสนอขอกำหนดตำแหน่งพยาบาลผู้ชำนาญการพิเศษ",
-      "duration": "",
-      "detail": "",
-      "docs": []
-    },
-    {
-      "id": "s3",
-      "title": "ขออนุมัติแต่งตั้งคณะกรรมการประเมินพนักงานมหาวิทยาลัยเพื่อแต่งตั้งให้ดำรงตำแหน่งพยาบาลผู้ชำนาญการพิเศษ",
-      "subtitle": "",
-      "duration": "",
-      "detail": "",
-      "docs": []
-    },
-    {
-      "id": "s4",
-      "title": "แจ้งผลการพิจารณาคุณสมบัติและผลงานเพื่อเสนอขอกำหนดตำแหน่ง",
-      "subtitle": "",
-      "duration": "",
-      "detail": "",
-      "docs": []
+      "id": "reviewer",
+      "name": "ขั้นตอนสำหรับผู้ตรวจสอบ",
+      "description": "สิ่งที่ผู้ตรวจสอบต้องดำเนินการเมื่อได้รับเรื่องเสนอขอกำหนดตำแหน่ง",
+      "steps": []
     }
   ]
 }
@@ -248,28 +292,44 @@
 (function () {
   'use strict';
 
-  // เก็บต้นฉบับของไฟล์ไว้ใช้ตอน "บันทึกเป็นไฟล์ HTML"
   const PRISTINE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
   const LS_KEY = 'academic-position-timeline';
   const LS_EXPORT = LS_KEY + ':exported';
+  const TRACK_COLORS = [['#22407a', '#e8eef9'], ['#2e7d5b', '#e3f3ea'], ['#7a4fb5', '#f0e9f9'], ['#c0692b', '#fbeee3']];
+  const TRACK_ICONS = ['user', 'check', 'file', 'file'];
 
   const app = document.getElementById('app');
   const modalRoot = document.getElementById('modal-root');
-  const embedded = JSON.parse(document.getElementById('initial-data').textContent);
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const embedded = normalize(JSON.parse(document.getElementById('initial-data').textContent), null);
 
   let data = load();
   let editMode = false;
   let previewUrl = null;
 
-  /* ---------------- helpers ---------------- */
+  /* ---------------- data ---------------- */
+  // รองรับข้อมูลรุ่นเก่า (ก่อนมีเมนู): ย้ายขั้นตอนที่แก้ไว้ไปไว้ในเมนู "ผู้ตรวจสอบ"
+  // ส่วนเมนูอื่นใช้ข้อมูลจากไฟล์ตามเดิม
+  function normalize(d, base) {
+    if (!Array.isArray(d.tracks)) {
+      const t = base ? clone(base.tracks) : [{ id: 'applicant', name: 'ขั้นตอน', description: '', steps: [] }];
+      const target = t.find(x => x.id === 'reviewer') || t[t.length - 1];
+      target.steps = Array.isArray(d.steps) ? d.steps : [];
+      d.tracks = t;
+      delete d.steps;
+    }
+    d.tracks.forEach(t => { t.steps = Array.isArray(t.steps) ? t.steps : []; t.steps.forEach(s => { s.docs = Array.isArray(s.docs) ? s.docs : []; }); });
+    return d;
+  }
   function load() {
     let local = null;
     try { local = JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch (e) {}
-    if (local && Array.isArray(local.steps) && (local.updatedAt || 0) > (embedded.updatedAt || 0)) return local;
-    return JSON.parse(JSON.stringify(embedded));
+    if (local && (Array.isArray(local.tracks) || Array.isArray(local.steps)) && (local.updatedAt || 0) > (embedded.updatedAt || 0)) return normalize(local, embedded);
+    return clone(embedded);
   }
   function lastExported() { try { return +localStorage.getItem(LS_EXPORT) || 0; } catch (e) { return 0; } }
-  function isDirty() { return (data.updatedAt || 0) > Math.max(embedded.updatedAt || 0, lastExported()); }
+  const isLocalDraft = () => (data.updatedAt || 0) > (embedded.updatedAt || 0);
+  const isDirty = () => (data.updatedAt || 0) > Math.max(embedded.updatedAt || 0, lastExported());
   function save(msg) {
     data.updatedAt = Date.now();
     try { localStorage.setItem(LS_KEY, JSON.stringify(data)); }
@@ -277,12 +337,22 @@
     render();
     if (msg) toast(msg);
   }
+  function discardLocal() {
+    try { localStorage.removeItem(LS_KEY); } catch (e) {}
+    data = clone(embedded);
+    closeModal(); render(); toast('กลับไปใช้ข้อมูลบนเว็บแล้ว');
+  }
+
+  /* ---------------- helpers ---------------- */
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const canEdit = () => data.showEditButton !== false || /[?&]edit\b/.test(location.search);
+  const trackColor = t => TRACK_COLORS[Math.max(0, data.tracks.indexOf(t)) % TRACK_COLORS.length];
 
   const ICONS = {
     file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+    user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    check: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
     download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>',
     eye: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
     link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
@@ -291,10 +361,13 @@
     trash: '<path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
     up: '<path d="M18 15l-6-6-6 6"/>',
     down: '<path d="M6 9l6 6 6-6"/>',
+    left: '<path d="M15 18l-6-6 6-6"/>',
+    right: '<path d="M9 18l6-6-6-6"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     back: '<path d="M19 12H5M11 18l-6-6 6-6"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     x: '<path d="M18 6L6 18M6 6l12 12"/>',
+    alert: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>',
     save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'
   };
@@ -340,20 +413,49 @@
   }
 
   /* ---------------- routing ---------------- */
-  function currentStep() {
-    const m = location.hash.match(/^#\/step\/(.+)$/);
-    return m ? data.steps.find(s => s.id === decodeURIComponent(m[1])) : null;
+  // #/t/<เมนู>  หรือ  #/t/<เมนู>/step/<ขั้นตอน>
+  function route() {
+    const h = location.hash;
+    let m = h.match(/^#\/t\/([^/]+)(?:\/step\/(.+))?$/);
+    if (m) {
+      const track = data.tracks.find(t => t.id === decodeURIComponent(m[1])) || data.tracks[0];
+      const step = m[2] && track ? track.steps.find(s => s.id === decodeURIComponent(m[2])) : null;
+      return { track, step };
+    }
+    m = h.match(/^#\/step\/(.+)$/); // ลิงก์รุ่นเก่า
+    if (m) {
+      const id = decodeURIComponent(m[1]);
+      for (const t of data.tracks) { const s = t.steps.find(x => x.id === id); if (s) return { track: t, step: s }; }
+    }
+    return { track: data.tracks[0], step: null };
   }
-  function go(id) { location.hash = id ? '#/step/' + encodeURIComponent(id) : '#/'; }
+  function go(trackId, stepId) {
+    location.hash = '#/t/' + encodeURIComponent(trackId) + (stepId ? '/step/' + encodeURIComponent(stepId) : '');
+  }
   window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
 
   /* ---------------- views ---------------- */
   function render() {
-    const step = currentStep();
+    const { track, step } = route();
     document.title = step ? step.title + ' | ' + data.title : data.title;
     document.body.classList.toggle('editing', editMode);
-    app.innerHTML = heroHtml() + (step ? detailHtml(step) : timelineHtml()) +
+    const [c, soft] = track ? trackColor(track) : TRACK_COLORS[0];
+    app.innerHTML = draftHtml() + heroHtml() +
+      '<main class="wrap content' + (step ? ' detail' : '') + '" style="--tc:' + c + ';--tc-soft:' + soft + '">' +
+        (step ? detailHtml(track, step) : tabsHtml(track) + timelineHtml(track)) +
+      '</main>' +
       '<footer class="foot">' + esc(data.kicker || '') + '</footer>' + editBarHtml();
+  }
+
+  function draftHtml() {
+    if (!isLocalDraft()) return '';
+    const exported = !isDirty();
+    return '<div class="draft"><div class="wrap draft-in">' + icon('alert') +
+      '<span><b>หน้านี้แสดงฉบับที่แก้ไขในเบราว์เซอร์นี้</b> — คนอื่นยังไม่เห็น ' +
+        (exported ? '(บันทึกเป็นไฟล์แล้ว รออัปโหลดขึ้น GitHub)' : 'ต้องบันทึกเป็นไฟล์ HTML แล้วอัปโหลดขึ้น GitHub') + '</span>' +
+      '<button class="btn primary sm" data-action="export-html">' + icon('save') + ' บันทึกเป็นไฟล์ HTML</button>' +
+      '<button class="btn ghost sm" data-action="discard">ดูฉบับบนเว็บ (ล้างการแก้ไข)</button>' +
+      '</div></div>';
   }
 
   function heroHtml() {
@@ -365,9 +467,22 @@
       '</div></header>';
   }
 
-  function timelineHtml() {
-    const N = data.steps.length;
-    const items = data.steps.map((s, i) => {
+  function tabsHtml(cur) {
+    if (data.tracks.length < 2 && !editMode) return '';
+    return '<nav class="tabs" aria-label="เลือกเมนู">' +
+      data.tracks.map((t, i) => {
+        const [c, soft] = trackColor(t);
+        return '<button class="tab' + (t === cur ? ' on' : '') + '" style="--tab-c:' + c + ';--tab-soft:' + soft + '" data-action="track" data-id="' + esc(t.id) + '"' + (t === cur ? ' aria-current="page"' : '') + '>' +
+          '<span class="tab-ic">' + icon(TRACK_ICONS[i] || 'file') + '</span>' +
+          '<span><span class="tab-t">' + esc(t.name) + '</span><span class="tab-n">' + t.steps.length + ' ขั้นตอน</span></span></button>';
+      }).join('') +
+      (editMode ? '<button class="tab add" data-action="track-add">' + icon('plus') + ' เพิ่มเมนู</button>' : '') +
+      '</nav>';
+  }
+
+  function timelineHtml(track) {
+    const steps = track.steps, N = steps.length, ti = data.tracks.indexOf(track);
+    const items = steps.map((s, i) => {
       const n = i + 1, docs = s.docs || [];
       return '<li class="tl-item">' +
         '<div class="tl-node">' + n + '</div>' +
@@ -388,25 +503,33 @@
         '</div></li>';
     }).join('');
 
-    return '<main class="wrap content">' +
-      '<div class="tl-intro">' + icon('file') + '<span>ทั้งหมด <b>' + N + ' ขั้นตอน</b> · คลิกที่ขั้นตอนเพื่อดูและดาวน์โหลดเอกสารตัวอย่าง</span></div>' +
+    const trackTools = editMode ? '<span class="tools-inline">' +
+      '<button class="icon-btn" title="เลื่อนเมนูไปซ้าย" data-action="track-left"' + (ti === 0 ? ' disabled' : '') + '>' + icon('left') + '</button>' +
+      '<button class="icon-btn" title="เลื่อนเมนูไปขวา" data-action="track-right"' + (ti === data.tracks.length - 1 ? ' disabled' : '') + '>' + icon('right') + '</button>' +
+      '<button class="icon-btn" title="แก้ไขชื่อเมนู" data-action="track-edit">' + icon('edit') + '</button>' +
+      '<button class="icon-btn del" title="ลบเมนู" data-action="track-del"' + (data.tracks.length < 2 ? ' disabled' : '') + '>' + icon('trash') + '</button>' +
+      '</span>' : '';
+
+    return '<div class="tl-intro">' + icon(TRACK_ICONS[ti] || 'file') +
+        '<span class="grow"><span class="track-name">' + esc(track.name) + ' · ' + N + ' ขั้นตอน</span>' +
+        (track.description ? '<span class="track-desc">' + esc(track.description) + '</span>' : '<span>คลิกที่ขั้นตอนเพื่อดูและดาวน์โหลดเอกสารตัวอย่าง</span>') + '</span>' +
+        trackTools + '</div>' +
       (N ? '<ol class="timeline">' + items + '</ol>' :
-        '<div class="empty">' + icon('file') + '<div>ยังไม่มีขั้นตอน' + (canEdit() ? ' — กด “แก้ไข / เพิ่มขั้นตอน” เพื่อเริ่มต้น' : '') + '</div></div>') +
-      (editMode ? '<div class="add-step"><button class="btn dashed" data-action="step-add">' + icon('plus') + ' เพิ่มขั้นตอน</button></div>' : '') +
-      '</main>';
+        '<div class="empty">' + icon('file') + '<div>ยังไม่มีขั้นตอนในเมนูนี้' + (canEdit() && !editMode ? ' — กด “แก้ไข / เพิ่มขั้นตอน” เพื่อเริ่มต้น' : '') + '</div></div>') +
+      (editMode ? '<div class="add-step"' + (N ? '' : ' style="padding-left:0;margin-top:14px"') + '><button class="btn dashed" data-action="step-add">' + icon('plus') + ' เพิ่มขั้นตอนใน “' + esc(track.name) + '”</button></div>' : '');
   }
 
-  function detailHtml(step) {
-    const idx = data.steps.indexOf(step), N = data.steps.length, n = idx + 1;
-    const prev = data.steps[idx - 1], next = data.steps[idx + 1];
+  function detailHtml(track, step) {
+    const steps = track.steps, idx = steps.indexOf(step), N = steps.length, n = idx + 1;
+    const prev = steps[idx - 1], next = steps[idx + 1];
     const docs = step.docs || [];
-    const mini = data.steps.map((s, i) =>
+    const mini = steps.map((s, i) =>
       '<button class="' + (i === idx ? 'on' : (i < idx ? 'done' : '')) + '" title="' + esc(s.title) + '" data-action="open" data-id="' + esc(s.id) + '">' + (i + 1) + '</button>').join('');
 
-    return '<main class="wrap content detail">' +
-      '<div class="card detail-head">' +
+    return '<div class="card detail-head">' +
         '<div class="content-top"><button class="btn link" data-action="back">' + icon('back') + ' กลับไปหน้า Timeline</button>' +
         '<div class="mini-steps" aria-label="ขั้นตอนทั้งหมด">' + mini + '</div></div>' +
+        '<div class="crumb">' + icon(TRACK_ICONS[data.tracks.indexOf(track)] || 'file') + esc(track.name) + '</div>' +
         '<div class="tl-step">ขั้นตอนที่ ' + n + ' จาก ' + N + '</div>' +
         '<h2>' + esc(step.title) + '</h2>' +
         (step.subtitle ? '<p class="tl-sub">' + esc(step.subtitle) + '</p>' : '') +
@@ -428,8 +551,7 @@
       '<nav class="pager">' +
         (prev ? '<button data-action="open" data-id="' + esc(prev.id) + '"><small>← ขั้นตอนที่ ' + idx + '</small><span>' + esc(prev.title) + '</span></button>' : '') +
         (next ? '<button class="next" data-action="open" data-id="' + esc(next.id) + '"><small>ขั้นตอนที่ ' + (n + 1) + ' →</small><span>' + esc(next.title) + '</span></button>' : '') +
-      '</nav>' +
-      '</main>';
+      '</nav>';
   }
 
   function docHtml(d) {
@@ -477,7 +599,7 @@
       try { const r = await opt.onSubmit(form); if (r !== false) closeModal(); }
       finally { btn.disabled = false; }
     };
-    const first = form.querySelector('input:not([type=radio]):not([type=file]),textarea,select');
+    const first = form.querySelector('input:not([type=radio]):not([type=file]):not([type=checkbox]),textarea,select');
     if (first) first.focus();
     return form;
   }
@@ -487,21 +609,47 @@
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && modalRoot.innerHTML) closeModal(); });
 
+  /* ---------------- track forms ---------------- */
+  function trackForm(track) {
+    const isNew = !track, t = track || {};
+    openModal({
+      title: isNew ? 'เพิ่มเมนูใหม่' : 'แก้ไขเมนู',
+      submitText: isNew ? 'เพิ่มเมนู' : 'บันทึก',
+      body:
+        '<label class="field"><span>ชื่อเมนู *</span><input name="name" value="' + esc(t.name) + '" placeholder="เช่น ขั้นตอนสำหรับผู้บังคับบัญชา"></label>' +
+        '<label class="field"><span>คำอธิบายเมนู</span><textarea name="description" rows="2" placeholder="เมนูนี้สำหรับใคร ใช้เมื่อไร">' + esc(t.description) + '</textarea></label>',
+      onSubmit: f => {
+        const name = f.elements.name.value.trim();
+        if (!name) { toast('กรุณากรอกชื่อเมนู', true); return false; }
+        const description = f.elements.description.value.trim();
+        if (isNew) {
+          const nt = { id: uid(), name, description, steps: [] };
+          data.tracks.push(nt); save('เพิ่มเมนูแล้ว'); go(nt.id);
+        } else {
+          track.name = name; track.description = description; save('บันทึกการแก้ไขแล้ว');
+        }
+      }
+    });
+  }
+
   /* ---------------- step forms ---------------- */
-  function stepForm(step) {
+  function stepForm(track, step) {
     const isNew = !step, s = step || {};
-    const N = data.steps.length;
+    const N = track.steps.length;
     let pos = '';
     if (isNew && N) {
       pos = '<label class="field"><span>ตำแหน่งของขั้นตอน</span><select name="pos">' +
         '<option value="' + N + '" selected>ต่อท้าย (เป็นขั้นตอนที่ ' + (N + 1) + ')</option>' +
-        data.steps.map((x, i) => '<option value="' + i + '">แทรกก่อนขั้นตอนที่ ' + (i + 1) + ' — ' + esc(x.title.slice(0, 40)) + (x.title.length > 40 ? '…' : '') + '</option>').join('') +
+        track.steps.map((x, i) => '<option value="' + i + '">แทรกก่อนขั้นตอนที่ ' + (i + 1) + ' — ' + esc(x.title.slice(0, 40)) + (x.title.length > 40 ? '…' : '') + '</option>').join('') +
         '</select></label>';
     }
     openModal({
-      title: isNew ? 'เพิ่มขั้นตอนใหม่' : 'แก้ไขขั้นตอน',
+      title: (isNew ? 'เพิ่มขั้นตอนใหม่ · ' : 'แก้ไขขั้นตอน · ') + track.name,
       submitText: isNew ? 'เพิ่มขั้นตอน' : 'บันทึก',
       body:
+        (data.tracks.length > 1 ? '<label class="field"><span>อยู่ในเมนู</span><select name="track">' +
+          data.tracks.map(t => '<option value="' + esc(t.id) + '"' + (t === track ? ' selected' : '') + '>' + esc(t.name) + '</option>').join('') +
+          '</select>' + (isNew ? '' : '<div class="hint">ถ้าเปลี่ยนเมนู ขั้นตอนนี้ (พร้อมเอกสาร) จะย้ายไปต่อท้ายเมนูนั้น</div>') + '</label>' : '') +
         '<label class="field"><span>ชื่อขั้นตอน *</span><textarea name="title" rows="2" required>' + esc(s.title) + '</textarea></label>' +
         '<label class="field"><span>คำอธิบายย่อ</span><textarea name="subtitle" rows="2" placeholder="เช่น ชื่อเรื่องที่ใช้ใน E-doc">' + esc(s.subtitle) + '</textarea></label>' +
         '<label class="field"><span>ระยะเวลา / กำหนดเวลา</span><input name="duration" value="' + esc(s.duration) + '" placeholder="เช่น ภายใน 30 วัน"></label>' +
@@ -511,13 +659,21 @@
         const v = k => f.elements[k] ? f.elements[k].value.trim() : '';
         if (!v('title')) { toast('กรุณากรอกชื่อขั้นตอน', true); f.elements.title.focus(); return false; }
         const fields = { title: v('title'), subtitle: v('subtitle'), duration: v('duration'), detail: v('detail') };
+        const target = (f.elements.track && data.tracks.find(t => t.id === f.elements.track.value)) || track;
         if (isNew) {
-          const at = f.elements.pos ? +f.elements.pos.value : N;
-          data.steps.splice(at, 0, Object.assign({ id: uid(), docs: [] }, fields));
+          const ns = Object.assign({ id: uid(), docs: [] }, fields);
+          if (target === track) track.steps.splice(f.elements.pos ? +f.elements.pos.value : N, 0, ns);
+          else target.steps.push(ns);
           save('เพิ่มขั้นตอนแล้ว');
+          if (target !== track) go(target.id);
         } else {
           Object.assign(step, fields);
-          save('บันทึกการแก้ไขแล้ว');
+          if (target !== track) {
+            track.steps = track.steps.filter(x => x !== step);
+            target.steps.push(step);
+            save('ย้ายไปเมนู “' + target.name + '” แล้ว');
+            go(target.id, route().step ? step.id : null);
+          } else save('บันทึกการแก้ไขแล้ว');
         }
       }
     });
@@ -539,7 +695,6 @@
       onSubmit: async f => {
         const kind = f.elements.kind.value;
         const name = f.elements.name.value.trim(), note = f.elements.note.value.trim();
-        step.docs = step.docs || [];
         if (kind === 'link') {
           const url = f.elements.url.value.trim();
           if (!/^https?:\/\//i.test(url)) { toast('กรุณาใส่ URL ที่ขึ้นต้นด้วย http:// หรือ https://', true); return false; }
@@ -577,7 +732,7 @@
     ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('over')));
   }
 
-  function docEditForm(step, d) {
+  function docEditForm(d) {
     openModal({
       title: 'แก้ไขเอกสาร',
       body:
@@ -589,7 +744,6 @@
       onSubmit: async f => {
         const name = f.elements.name.value.trim();
         if (!name) { toast('กรุณากรอกชื่อเอกสาร', true); return false; }
-        d.name = name; d.note = f.elements.note.value.trim();
         if (d.kind === 'link') {
           const url = f.elements.url.value.trim();
           if (!/^https?:\/\//i.test(url)) { toast('URL ไม่ถูกต้อง', true); return false; }
@@ -598,6 +752,7 @@
           const file = f.elements.file.files[0];
           d.data = await readFile(file); d.fileName = file.name; d.mime = file.type || 'application/octet-stream'; d.size = file.size;
         }
+        d.name = name; d.note = f.elements.note.value.trim();
         save('บันทึกการแก้ไขแล้ว');
       }
     });
@@ -624,7 +779,7 @@
         '<label class="field"><span>ข้อความเหนือหัวเรื่อง</span><input name="kicker" value="' + esc(data.kicker) + '"></label>' +
         '<label class="field"><span>หัวเรื่อง *</span><input name="title" value="' + esc(data.title) + '"></label>' +
         '<label class="field"><span>คำอธิบาย</span><textarea name="subtitle" rows="2">' + esc(data.subtitle) + '</textarea></label>' +
-        '<label class="check"><input type="checkbox" name="hideEdit"' + (data.showEditButton === false ? ' checked' : '') + '><span>ซ่อนปุ่ม “แก้ไข” จากผู้ชม<br><small style="color:var(--ink-3)">ผู้ดูแลยังเข้าโหมดแก้ไขได้ โดยเติม <code>?edit</code> ต่อท้ายที่อยู่ของไฟล์</small></span></label>' +
+        '<label class="check"><input type="checkbox" name="hideEdit"' + (data.showEditButton === false ? ' checked' : '') + '><span>ซ่อนปุ่ม “แก้ไข” จากผู้ชม<br><small style="color:var(--ink-3)">ผู้แก้ไขยังเข้าโหมดแก้ไขได้ โดยเติม <code>?edit</code> ต่อท้ายลิงก์</small></span></label>' +
         '<div class="sect"><h4>สำรองข้อมูล</h4><div class="row-btns">' +
           '<button type="button" class="btn ghost sm" data-x="json-out">ส่งออก JSON</button>' +
           '<label class="btn ghost sm" style="position:relative">นำเข้า JSON<input type="file" accept=".json,application/json" data-x="json-in" style="position:absolute;inset:0;opacity:0;cursor:pointer"></label>' +
@@ -644,16 +799,13 @@
       const file = e.target.files[0]; if (!file) return;
       try {
         const obj = JSON.parse(await file.text());
-        if (!Array.isArray(obj.steps)) throw new Error('bad');
+        if (!Array.isArray(obj.tracks) && !Array.isArray(obj.steps)) throw new Error('bad');
         if (!confirm('นำเข้าข้อมูลนี้แทนข้อมูลปัจจุบันทั้งหมด?')) return;
-        data = obj; closeModal(); save('นำเข้าข้อมูลแล้ว');
+        data = normalize(obj, embedded); closeModal(); save('นำเข้าข้อมูลแล้ว');
       } catch (err) { toast('ไฟล์ JSON ไม่ถูกต้อง', true); }
     };
     form.querySelector('[data-x=reset]').onclick = () => {
-      if (!confirm('ล้างการแก้ไขที่ยังไม่ได้บันทึกเป็นไฟล์ แล้วกลับไปใช้ข้อมูลในไฟล์ HTML นี้?')) return;
-      try { localStorage.removeItem(LS_KEY); } catch (e) {}
-      data = JSON.parse(JSON.stringify(embedded));
-      closeModal(); render(); toast('กลับไปใช้ข้อมูลในไฟล์แล้ว');
+      if (confirm('ล้างการแก้ไขที่ทำไว้ในเบราว์เซอร์นี้ แล้วกลับไปใช้ข้อมูลบนเว็บ?\n(ถ้ายังไม่ได้บันทึกเป็นไฟล์ HTML การแก้ไขจะหายถาวร)')) discardLocal();
     };
   }
 
@@ -665,50 +817,68 @@
     saveBlob(new Blob([html], { type: 'text/html;charset=utf-8' }), 'timeline-ตำแหน่งวิชาการ.html');
     try { localStorage.setItem(LS_EXPORT, String(data.updatedAt)); } catch (e) {}
     render();
-    toast('ดาวน์โหลดไฟล์ใหม่แล้ว — ใช้ไฟล์นี้แทนไฟล์เดิม');
+    toast('ดาวน์โหลดไฟล์ใหม่แล้ว — เปลี่ยนชื่อเป็น index.html แล้วอัปโหลดขึ้น GitHub');
   }
 
   /* ---------------- events ---------------- */
-  function moveStep(id, dir) {
-    const i = data.steps.findIndex(s => s.id === id), j = i + dir;
-    if (i < 0 || j < 0 || j >= data.steps.length) return;
-    [data.steps[i], data.steps[j]] = [data.steps[j], data.steps[i]];
-    save();
+  function move(arr, item, dir) {
+    const i = arr.indexOf(item), j = i + dir;
+    if (i < 0 || j < 0 || j >= arr.length) return false;
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+    return true;
   }
 
   app.addEventListener('click', e => {
     const el = e.target.closest('[data-action]');
     if (!el || el.disabled) return;
     const a = el.dataset.action, id = el.dataset.id;
-    const step = currentStep();
-    const findStep = () => data.steps.find(s => s.id === id);
-    const findDoc = () => step && (step.docs || []).find(d => d.id === id);
+    const { track, step } = route();
+    const findStep = () => track.steps.find(s => s.id === id);
+    const findDoc = () => step && step.docs.find(d => d.id === id);
 
     switch (a) {
-      case 'open': go(id); break;
-      case 'back': go(null); break;
+      case 'track': go(id); break;
+      case 'open': go(track.id, id); break;
+      case 'back': go(track.id); break;
       case 'enter-edit': editMode = true; render(); toast('เข้าสู่โหมดแก้ไข'); break;
       case 'exit-edit':
         editMode = false; render();
-        if (isDirty()) toast('อย่าลืมกด “บันทึกเป็นไฟล์ HTML” เพื่อเก็บการแก้ไขลงไฟล์', true);
+        if (isDirty()) toast('อย่าลืมกด “บันทึกเป็นไฟล์ HTML” แล้วอัปโหลดขึ้น GitHub', true);
+        break;
+      case 'discard':
+        if (confirm('ล้างการแก้ไขที่ทำไว้ในเบราว์เซอร์นี้ แล้วกลับไปใช้ข้อมูลบนเว็บ?\n(ถ้ายังไม่ได้บันทึกเป็นไฟล์ HTML การแก้ไขจะหายถาวร)')) discardLocal();
         break;
       case 'settings': settingsForm(); break;
       case 'export-html': exportHtml(); break;
-      case 'step-add': stepForm(null); break;
-      case 'step-edit': { const s = findStep(); if (s) stepForm(s); break; }
-      case 'step-up': moveStep(id, -1); break;
-      case 'step-down': moveStep(id, 1); break;
-      case 'step-del': {
-        const s = findStep(); if (!s) break;
-        const nd = (s.docs || []).length;
-        if (!confirm('ลบขั้นตอน “' + s.title + '”' + (nd ? ' พร้อมเอกสาร ' + nd + ' รายการ' : '') + ' ?')) break;
-        data.steps = data.steps.filter(x => x !== s);
-        if (step === s) go(null);
-        save('ลบขั้นตอนแล้ว');
+
+      case 'track-add': trackForm(null); break;
+      case 'track-edit': trackForm(track); break;
+      case 'track-left': if (move(data.tracks, track, -1)) save(); break;
+      case 'track-right': if (move(data.tracks, track, 1)) save(); break;
+      case 'track-del': {
+        if (data.tracks.length < 2) break;
+        if (!confirm('ลบเมนู “' + track.name + '”' + (track.steps.length ? ' พร้อมขั้นตอน ' + track.steps.length + ' ขั้นตอน' : '') + ' ?')) break;
+        data.tracks = data.tracks.filter(t => t !== track);
+        save('ลบเมนูแล้ว'); go(data.tracks[0].id);
         break;
       }
+
+      case 'step-add': stepForm(track, null); break;
+      case 'step-edit': { const s = findStep(); if (s) stepForm(track, s); break; }
+      case 'step-up': { const s = findStep(); if (s && move(track.steps, s, -1)) save(); break; }
+      case 'step-down': { const s = findStep(); if (s && move(track.steps, s, 1)) save(); break; }
+      case 'step-del': {
+        const s = findStep(); if (!s) break;
+        const nd = s.docs.length;
+        if (!confirm('ลบขั้นตอน “' + s.title + '”' + (nd ? ' พร้อมเอกสาร ' + nd + ' รายการ' : '') + ' ?')) break;
+        track.steps = track.steps.filter(x => x !== s);
+        save('ลบขั้นตอนแล้ว');
+        if (step === s) go(track.id);
+        break;
+      }
+
       case 'doc-add': if (step) docAddForm(step); break;
-      case 'doc-edit': { const d = findDoc(); if (d) docEditForm(step, d); break; }
+      case 'doc-edit': { const d = findDoc(); if (d) docEditForm(d); break; }
       case 'doc-del': {
         const d = findDoc(); if (!d) break;
         if (!confirm('ลบเอกสาร “' + d.name + '” ?')) break;
